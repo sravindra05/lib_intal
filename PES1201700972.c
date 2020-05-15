@@ -2,19 +2,16 @@
 #include<stdlib.h>
 #include<string.h>
 #include"intal.h"
-int ctoi(char c) {
+int ctoi(char c) {return c-'0';}
 
-    return c-'0';
-
-}
 typedef struct num{
     char *number;
     int len;
 }num;
 
-num* read_num(char *s);
+num* read_num(const char *s);
 
-num* read_num(char *s){
+num* read_num(const char *s){
     num *x=malloc(sizeof(num));
     int i = 0;
     while(s[i]!='\0'){
@@ -25,7 +22,27 @@ num* read_num(char *s){
     strcpy(x->number,s);
     return x; 
 }
-char* intal_add(char* intal1, char* intal2){
+char *strip(char *s){
+    int j=0;
+    char *n=malloc(sizeof(char)*strlen(s));
+    if(s[j]!='0')
+        return s;
+    while(s[j]=='0'){
+        j++;
+    }
+    if(j==strlen(s)){
+        return "0";
+    }
+    //printf("Non zero element found at %d\n",j);
+    int ind = 0;
+    while(s[j]!='\0'){
+        n[ind]=s[j];
+        j++;
+        ind++;
+    }
+    return n;
+}
+char* intal_add(const char* intal1, const char* intal2){
     num *n1=read_num(intal1);
     num *n2=read_num(intal2);
     int max_len=n1->len + n2->len;
@@ -101,9 +118,9 @@ char* intal_add(char* intal1, char* intal2){
         sum[j]='0';
         j--;
     }
-    return sum;
+    return strip(sum);
 }
-int intal_compare(char* intal1, char* intal2){
+int intal_compare(const char* intal1, const char* intal2){
     num *n1=read_num(intal1);
     num *n2=read_num(intal2);
     if(n1->len>n2->len){
@@ -125,7 +142,7 @@ int intal_compare(char* intal1, char* intal2){
         return 0;
     }
 }
-char* intal_diff(char* intal1, char* intal2){
+char* intal_diff(const char* intal1, const char* intal2){
     num *n1,*n2;
     if(intal_compare(intal1,intal2)==1){
         n1=read_num(intal1);
@@ -180,9 +197,9 @@ char* intal_diff(char* intal1, char* intal2){
             j--;
             i--;
         }
-        return diff;
+        return strip(diff);
 }
 int main(){
     
-    printf("%s\n",intal_add("0","0"));
+    printf("%s\n",intal_add("999","1"));
 }
