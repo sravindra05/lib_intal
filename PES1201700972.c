@@ -120,6 +120,84 @@ char* intal_add(const char* intal1, const char* intal2){
     }
     return strip(sum);
 }
+char* helper_add(char* intal1, char* intal2){
+    num *n1=read_num(intal1);
+    num *n2=read_num(intal2);
+    int max_len=n1->len + n2->len;
+    char *sum=malloc(sizeof(char)*max_len);
+    if(n2->len>n1->len){
+        num *t=n2;
+        n2=n1;
+        n1=t;
+    }
+    int j=n2->len + n1->len;
+    int d=n1->len - n2->len;
+    sum[j]='\0';
+    j--;
+    int carry=0;
+    int s=0;
+    for(int i = n2->len -1;i>=0;i--){
+        if(!carry){
+            s =ctoi(n1->number[d+i])+ctoi(n2->number[i]);
+            if(s>=10){
+                carry=1;
+                s=s%10;
+            }
+            else{
+                carry=0;
+            }
+            
+            sum[j]=s+'0';
+            j--;
+        }
+        else{
+            s = ctoi(n1->number[d+i])+ctoi(n2->number[i])+carry;
+            if(s>=10){
+                carry=1;
+                s=s%10;
+            }
+            else{
+                carry=0;
+            }
+            sum[j]=s+'0';
+            j--;
+        }
+
+    }
+    int i= d-1;
+    while(i>=0){
+        if(!carry){
+            sum[j]=n1->number[i];
+            j--;
+        }
+        else{
+            s = ctoi(n1->number[i])+carry;
+            if(s>=10){
+                carry=1;
+                s%=10;
+                
+            }
+            else{
+                carry=0;
+            }
+            sum[j]=s+'0';
+            j--;
+
+        }
+        i--;
+    }
+    while(j>=0){
+        if(carry){
+            sum[j]='1';
+            carry=0;
+            j--;
+            continue;
+        }
+        sum[j]='0';
+        j--;
+    }
+    return strip(sum);
+}
 int intal_compare(const char* intal1, const char* intal2){
     num *n1=read_num(intal1);
     num *n2=read_num(intal2);
@@ -199,7 +277,29 @@ char* intal_diff(const char* intal1, const char* intal2){
         }
         return strip(diff);
 }
+char* intal_multiply(const char* intal1, const char* intal2){
+    num *n1,*n2;
+    if(intal_compare(intal1,intal2)==1){
+        n2=read_num(intal1);
+        n1=read_num(intal2);
+       
+    }
+    else{
+        n2=read_num(intal2);
+        n1=read_num(intal1);
+    }
+    char *c;
+    char *res=malloc(sizeof(char)*(n1->len+n2->len+1));
+    strcpy(res,"0");
+    while(strcmp(n1->number,"0")!=0){
+        strcpy(res,helper_add(res,n2->number));
+        c=intal_diff(n1->number,"1");
+        //printf("%s\n",c);
+        strcpy(n1->number,c);
+    }
+    return res;
+}
 int main(){
+    printf("%s\n",intal_multiply("999","9999"));
     
-    printf("%s\n",intal_add("999","1"));
 }

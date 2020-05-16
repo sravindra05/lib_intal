@@ -6,6 +6,7 @@ int ctoi(char c) {
     return c-'0';
 
 }
+char *line="He.llo.";
 char *strip(char *s){
     int j=0;
     char *n=malloc(sizeof(char)*strlen(s));
@@ -27,5 +28,8 @@ char *strip(char *s){
     return s;
 }
 int main(){
-    printf("%s\n",strip("00"));
+    char s[]="H:e.yt:";
+    char *t=strtok(s,".");
+    printf("%s\n",strtok(t,":"));
+    printf("%s\n",strtok(NULL,"."));
 }
