@@ -16,7 +16,7 @@ num* read_num(const char *s){
         i++;
     }
     x->len=i;
-    x->number=malloc(sizeof(char)*1000);
+    x->number=malloc(sizeof(char)*1003);
     strcpy(x->number,s);
     return x; 
 }
@@ -93,7 +93,7 @@ char* helper_add(char* intal1, char* intal2){
     num *n1=read_num(intal1);
     num *n2=read_num(intal2);
     int max_len=n1->len + n2->len;
-    char *sum=malloc(sizeof(char)*max_len);
+    char *sum=malloc(sizeof(char)*1003);
     if(n2->len>n1->len){
         num *t=n2;
         n2=n1;
@@ -344,23 +344,8 @@ char* intal_multiply(const char* intal1, const char* intal2){
     return res;
 }
 
-char* intal_mod(const char* intal1, const char* intal2){
-    if(intal_compare(intal1,intal2)==-1){
-        char *res=malloc(sizeof(char)*strlen(intal1));
-        strcpy(res,intal1);
-        return res;
-    }
-    else if(intal_compare(intal1,intal2)==0){
-        return "0";
-    }
-    else{
-        
-
-    }
-}
-
 int intal_max(char **arr, int n){
-    char *max=malloc(sizeof(char)*1000);
+    char *max=malloc(sizeof(char)*1003);
     strcpy(max,"0");
     int i=0;
     int m;
@@ -374,9 +359,9 @@ int intal_max(char **arr, int n){
     return m;
 }
 int intal_min(char **arr, int n){
-    char *min=malloc(sizeof(char)*1000);
+    char *min=malloc(sizeof(char)*1003);
     int i=0;
-    while(i<1000){
+    while(i<1003){
         min[i]='9';
         i++;
     }
@@ -421,9 +406,9 @@ int intal_binsearch(char **arr, int n, const char* key){
     return binsearch_helper(arr,0,n-1,key);
 }
 char* intal_fibonacci(unsigned int n){
-    char *i1=malloc(sizeof(char)*1000);
-    char *i2=malloc(sizeof(char)*1000);
-    char *i3=malloc(sizeof(char)*1000);
+    char *i1=malloc(sizeof(char)*1003);
+    char *i2=malloc(sizeof(char)*1003);
+    char *i3=malloc(sizeof(char)*1003);
     strcpy(i1,"0");
     strcpy(i2,"1");
     if(n==0)
@@ -438,27 +423,197 @@ char* intal_fibonacci(unsigned int n){
         strcpy(i2,i3);
         i++;
     }
+    free(i1);
+    free(i2);
     return i3;
 
 }
-int main(){
-    char a[10][100] = {	"1234512345123451234512345",
-						"543215432154321543215432154321",
-						"0",
-						"1234512345123451234512345",
-						"1234512345123451234512344",
-						"12",
-						"265252859812191058636308480000000",
-						"265252859812191058636308480000000",
-						"5432154321543215432154321",
-						"3" };
-    /*char **arr=malloc(sizeof(char *)*10);
-    int i=0;
-    while(i<10){
-        arr[i]=malloc(sizeof(char)*1000);
-        scanf("%s",arr[i]);
-        i++;
-    }*/
-    printf("%s\n",intal_fibonacci(1000));
+char* intal_bincoeff(unsigned int n, unsigned int k)
+{
+    char* C[k+1];
+    for(int i=0;i<k+1;i++)
+    {
+        C[i] = (char*)malloc(sizeof(char)*1003);
+        strcpy(C[i],"0");
+    }
+    // memset(C, "0", k+1);
+    // printf("okay\n");
+
+    strcpy(C[0],"1");
+    // printf("hey\n");
+
+    for(int i=1;i<=n;i++)
+    {
+        for (int j = (i<k)?i:k; j > 0; j--) 
+            strcpy(C[j],intal_add(C[j],C[j-1])); 
+    }
+    return(C[k]);
+}
+void merge(char** arr, int l, int m, int r)
+{
+    // int i, j, k; 
+    int n1 = m - l + 1; 
+    int n2 =  r - m; 
+
+    char* left[n1];
+    char* right[n2];
+
+    for (int i = 0; i < n1; i++) 
+    {
+        left[i] = (char*)malloc(sizeof(char)*1003);
+        strcpy(left[i],arr[l + i]); 
+    }
+    for (int i = 0; i < n2; i++) 
+    {
+        right[i] = (char*)malloc(sizeof(char)*1003);
+        strcpy(right[i],arr[m + 1+ i]); 
+    }
+
+    int i = 0; 
+    int j = 0; 
+    int k = l;
+
+    while (i < n1 && j < n2) 
+    { 
+        if (intal_compare(left[i],right[j])<1) 
+        { 
+            strcpy(arr[k],left[i]); 
+            i++; 
+        } 
+        else
+        { 
+            strcpy(arr[k],right[j]); 
+            j++; 
+        } 
+        k++; 
+    } 
     
+    while (i < n1) 
+    { 
+        strcpy(arr[k],left[i]); 
+        i++; 
+        k++; 
+    } 
+
+    while (j < n2) 
+    { 
+        strcpy(arr[k],right[j]); 
+        j++; 
+        k++; 
+    }   
+}
+
+void merge_sort(char** arr, int l, int r)
+{
+    if(r>l)
+    {
+        int m=(l+r)/2;
+        merge_sort(arr,l,m);
+        merge_sort(arr,m+1,r);
+        merge(arr, l,m,r);
+    }
+}
+
+void intal_sort(char **arr, int n)
+{
+    merge_sort(arr,0,n-1);
+}
+char* intal_factorial(unsigned int n){
+    if(n==1)
+        return "1";
+    char num[1003];
+    sprintf(num,"%d",n);
+    return intal_multiply(num,intal_factorial(n-1));
+}
+char* intal_pow(const char* intal1, unsigned int n){
+    int j=1;
+    char *num=malloc(sizeof(char)*1003);
+    strcpy(num,intal1);
+    while(2*j<n){
+        strcpy(num,intal_multiply(num,num));
+        j*=2;
+    }
+    while(j<n){
+        strcpy(num,intal_multiply(num,intal1));
+        j++;
+    }
+    return num;
+}
+
+char* intal_mod (const char *intal1, const char *intal2)
+{
+  int flag = intal_compare (intal1, intal2);
+  if (flag == 0){
+      return "0";
+    }
+  else if (flag == -1){
+      return intal1;
+    }
+  else{
+      char *num = malloc (sizeof (char) * 1003);
+      strncpy (num, intal1, strlen (intal2));
+      int x;
+      int j=strlen(intal2);
+      int i = strlen (intal2);
+      int tot = strlen (intal1);
+      while (i < tot){
+        while (intal_compare (num, intal2) == 1){ 
+            strcpy (num, intal_diff (num, intal2));
+            j=strlen(num);
+            }
+        num[j]=intal1[i];
+        num[++j]='\0';
+        i++;
+	    }
+        while ((x=intal_compare (num, intal2)) == 1){
+        strcpy (num, intal_diff (num, intal2));
+        }
+        if(x==0)
+            return "0";
+        return num;
+    }
+}
+char* helper_gcd(const char* intal1, const char* intal2)
+{
+    if(strcmp(intal1,"0")==0)
+        return(intal2);
+    return(helper_gcd(intal_mod(intal2,intal1),intal1));
+}
+
+char* intal_gcd(const char* intal1, const char* intal2)
+{
+    if(strcmp(intal1,"0")==0 && strcmp(intal2,"0")==0)
+        return "0";
+    int flag = intal_compare(intal1,intal2);
+    if(flag==0)
+        return(intal1);
+
+    return(helper_gcd(intal1,intal2));
+}
+char *max(char* i1,char *i2){
+    if(intal_compare(i1,i2)==1){
+        return i1;
+    }
+    return i2;
+}
+char* coin_row_problem(char **arr, int n)
+{
+    char** result;
+    
+    result=malloc(sizeof(char *)*(n+10));
+    for(int i=0;i<n+10;i++)
+    {
+        result[i] = (char*)malloc(sizeof(char)*1003);
+    }
+    
+    strcpy(result[0],"0");
+    strcpy(result[1],arr[0]);
+    
+    int j;
+    for(j=1;j<n;j++){
+        strcpy(result[j+1],max(intal_add(arr[j],result[j-1]),result[j]));
+    }
+    
+    return result[j];
+
 }
