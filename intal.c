@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include"intal.h"
+
 typedef struct num{
     char *number;
     int len;
